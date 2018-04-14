@@ -360,7 +360,7 @@
       // select referred container
       container = stickyOptions.stickTo
         ? stickTo_document
-          ? document
+          ? elemParent
           : typeof stickyOptions.stickTo === 'string'
             ? document.querySelector(stickyOptions.stickTo)
             : stickyOptions.stickTo
@@ -389,12 +389,10 @@
 
       container_height = calcContainerHeight();
 
-      container_offsetTop = !stickTo_document ? Helpers.offset(container).top : 0;
+      container_offsetTop = Helpers.offset(container).top;
       elemParent_offsetTop = !stickyOptions.stickTo
         ? container_offsetTop // parent is container
-        : !stickTo_document
-          ? Helpers.offset(elemParent).top
-          : 0;
+        : Helpers.offset(elemParent).top;
       window_height = window.innerHeight;
       sticky_offsetTop = elem.offsetTop - (parseInt(Sticky.css.marginTop) || 0);
 
