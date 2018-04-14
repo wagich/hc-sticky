@@ -97,7 +97,7 @@ declare namespace hcSticky {
          * Element that represents the reference for height instead of height of the container (parent element).
          * @default null
          */
-        stickTo?: string | Element,
+        stickTo?: string | Element | Document,
 
         /**
          * When set to `false`, sticky content will not move with the page if it is bigger than Window.
