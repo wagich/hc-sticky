@@ -45,7 +45,8 @@
     onBeforeResize: null,
     onResize: null,
     resizeDebounce: 100,
-    disable: false
+    disable: false,
+    spacer: true
   };
 
   const document = window.document;
@@ -181,7 +182,7 @@
           return;
         }
 
-        if (Spacer.isAttached === false) {
+        if (stickyOptions.spacer && Spacer.isAttached === false) {
           Spacer.attach();
         }
 
@@ -231,16 +232,18 @@
           return;
         }
 
-        if (args.disable === true) {
-          // remove spacer
-          if (Spacer.isAttached === true) {
-            Spacer.detach();
+        if (stickyOptions.spacer) {
+          if (args.disable === true) {
+            // remove spacer
+            if (Spacer.isAttached === true) {
+              Spacer.detach();
+            }
           }
-        }
-        else {
-          // check spacer
-          if (Spacer.isAttached === false) {
-            Spacer.attach();
+          else {
+            // check spacer
+            if (Spacer.isAttached === false) {
+              Spacer.attach();
+            }
           }
         }
 
@@ -299,7 +302,11 @@
 
         // get spacer offset and position
         Spacer.offsetLeft = Helpers.offset(elem).left - (parseInt(elemStyle.marginLeft) || 0);
-        Spacer.positionLeft = Helpers.position(elem).left;
+        if (elem.offsetParent != null) {
+          Spacer.positionLeft = Helpers.position(elem).left;
+        } else {
+          Spacer.positionLeft = Helpers.offset(elem).left;
+        }
 
         // get spacer width
         Spacer.width = Helpers.getStyle(elem, 'width');
@@ -560,7 +567,7 @@
       Sticky.position = null;
 
       // remove spacer
-      if (Spacer.isAttached === true) {
+      if (stickyOptions.spacer && Spacer.isAttached === true) {
         Spacer.detach();
       }
     };
