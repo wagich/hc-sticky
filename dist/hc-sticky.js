@@ -8,4 +8,949 @@
  * Description: Cross-browser plugin that makes any element on your page visible while you scroll
  * License: MIT
  */
-!function(t,e){"use strict";if("object"==typeof module&&"object"==typeof module.exports){if(!t.document)throw new Error("HC-Sticky requires a browser to run.");module.exports=e(t)}else"function"==typeof define&&define.amd?define("hcSticky",[],e(t)):e(t)}("undefined"!=typeof window?window:this,function(t){"use strict";var e={top:0,bottom:0,bottomEnd:0,innerTop:0,innerSticker:null,stickyClass:"sticky",stickTo:null,followScroll:!0,queries:null,queryFlow:"down",onStart:null,onStop:null,onBeforeResize:null,onResize:null,resizeDebounce:100,disable:!1},o=t.document,i=function(n,s){if("string"==typeof n&&(n=o.querySelector(n)),!n)return!1;var r={},l=i.Helpers,a=n.parentNode;"static"===l.getStyle(a,"position")&&(a.style.position="relative");var c=function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{};l.isEmptyObject(t)&&!l.isEmptyObject(r)||(r=Object.assign({},e,r,t))},f=function(){return r.disable},d=function(){if(r.queries){var o=t.innerWidth,i=r.queryFlow,n=r.queries;if(function(t){r=Object.assign({},e,t||{})}(s),"up"===i)for(var a in n)o>=a&&!l.isEmptyObject(n[a])&&c(n[a]);else{var f=[];for(var d in r.queries){var p={};p[d]=n[d],f.push(p)}for(var u=f.length-1;u>=0;u--){var m=f[u],g=Object.keys(m)[0];o<=g&&!l.isEmptyObject(m[g])&&c(m[g])}}}},p={css:{},position:null,stick:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{};l.hasClass(n,r.stickyClass)||(!1===u.isAttached&&u.attach(),p.position="fixed",n.style.position="fixed",n.style.left=u.offsetLeft+"px",n.style.width=u.width,void 0===t.bottom?n.style.bottom="auto":n.style.bottom=t.bottom+"px",void 0===t.top?n.style.top="auto":n.style.top=t.top+"px",n.classList?n.classList.add(r.stickyClass):n.className+=" "+r.stickyClass,r.onStart&&r.onStart.call(n,r))},reset:function(){var t=arguments.length>0&&void 0!==arguments[0]?arguments[0]:{};if(t.disable=t.disable||!1,"fixed"===p.position||null===p.position||!(void 0===t.top&&void 0===t.bottom||void 0!==t.top&&(parseInt(l.getStyle(n,"top"))||0)===t.top||void 0!==t.bottom&&(parseInt(l.getStyle(n,"bottom"))||0)===t.bottom)){!0===t.disable?!0===u.isAttached&&u.detach():!1===u.isAttached&&u.attach();var e=t.position||p.css.position;p.position=e,n.style.position=e,n.style.left=!0===t.disable?p.css.left:u.positionLeft+"px",n.style.width="absolute"!==e?p.css.width:u.width,void 0===t.bottom?n.style.bottom=!0===t.disable?"":"auto":n.style.bottom=t.bottom+"px",void 0===t.top?n.style.top=!0===t.disable?"":"auto":n.style.top=t.top+"px",n.classList?n.classList.remove(r.stickyClass):n.className=n.className.replace(new RegExp("(^|\\b)"+r.stickyClass.split(" ").join("|")+"(\\b|$)","gi")," "),r.onStop&&r.onStop.call(n,r)}}},u={el:o.createElement("div"),offsetLeft:null,positionLeft:null,width:null,isAttached:!1,init:function(){for(var t in p.css)u.el.style[t]=p.css[t];var e=l.getStyle(n);u.offsetLeft=l.offset(n).left-(parseInt(e.marginLeft)||0),u.positionLeft=l.position(n).left,u.width=l.getStyle(n,"width")},attach:function(){a.insertBefore(u.el,n.nextSibling),u.isAttached=!0},detach:function(){u.el=a.removeChild(u.el),u.isAttached=!1}},m=void 0,g=void 0,h=void 0,y=void 0,v=void 0,b=void 0,S=void 0,w=void 0,k=void 0,E=void 0,x=void 0,L=void 0,T=void 0,j=void 0,C=void 0,O=void 0,z=void 0,N=void 0,R=function(){p.css=function(t){var e=l.getCascadedStyle(t),o=l.getStyle(t),i={height:t.offsetHeight+"px",left:e.left,right:e.right,top:e.top,bottom:e.bottom,position:o.position,display:o.display,verticalAlign:o.verticalAlign,boxSizing:o.boxSizing,marginLeft:e.marginLeft,marginRight:e.marginRight,marginTop:e.marginTop,marginBottom:e.marginBottom,paddingLeft:e.paddingLeft,paddingRight:e.paddingRight};return e.float&&(i.float=e.float||"none"),e.cssFloat&&(i.cssFloat=e.cssFloat||"none"),o.MozBoxSizing&&(i.MozBoxSizing=o.MozBoxSizing),i.width="auto"!==e.width?e.width:"border-box"===i.boxSizing||"border-box"===i.MozBoxSizing?t.offsetWidth+"px":o.width,i}(n),u.init(),m=!(!r.stickTo||!("document"===r.stickTo||r.stickTo.nodeType&&9===r.stickTo.nodeType||"object"==typeof r.stickTo&&r.stickTo instanceof("undefined"!=typeof HTMLDocument?HTMLDocument:Document))),g=r.stickTo?m?o:"string"==typeof r.stickTo?o.querySelector(r.stickTo):r.stickTo:a,C=(N=function(){var t=n.offsetHeight+(parseInt(p.css.marginTop)||0)+(parseInt(p.css.marginBottom)||0),e=(C||0)-t;return e>=-1&&e<=1?C:t})(),y=(z=function(){return m?Math.max(o.documentElement.clientHeight,o.body.scrollHeight,o.documentElement.scrollHeight,o.body.offsetHeight,o.documentElement.offsetHeight):g.offsetHeight})(),v=m?0:l.offset(g).top,b=r.stickTo?m?0:l.offset(a).top:v,S=t.innerHeight,O=n.offsetTop-(parseInt(p.css.marginTop)||0),h=r.innerSticker?"string"==typeof r.innerSticker?o.querySelector(r.innerSticker):r.innerSticker:null,w=isNaN(r.top)&&r.top.indexOf("%")>-1?parseFloat(r.top)/100*S:r.top,k=isNaN(r.bottom)&&r.bottom.indexOf("%")>-1?parseFloat(r.bottom)/100*S:r.bottom,E=h?h.offsetTop:r.innerTop?r.innerTop:0,x=isNaN(r.bottomEnd)&&r.bottomEnd.indexOf("%")>-1?parseFloat(r.bottomEnd)/100*S:r.bottomEnd,L=v-w+E+O},H=t.pageYOffset||o.documentElement.scrollTop,A=0,B=void 0,I=function(){C=N(),y=z(),T=v+y-w-x,j=C>S;var e=t.pageYOffset||o.documentElement.scrollTop,i=Math.round(l.offset(n).top),s=i-e,c=void 0;B=e<H?"up":"down",A=e-H,H=e,e>L?T+w+(j?k:0)-(r.followScroll&&j?0:w)<=e+C-E-(C-E>S-(L-E)&&r.followScroll&&(c=C-S-E)>0?c:0)?p.reset({position:"absolute",bottom:b+a.offsetHeight-T-w}):j&&r.followScroll?"down"===B?s+C+k<=S?p.stick({bottom:k}):"fixed"===p.position&&p.reset({position:"absolute",top:i-w-L-A+E}):s+E<0&&"fixed"===p.position?p.reset({position:"absolute",top:i-w-L+E-A}):i>=e+w-E&&p.stick({top:w-E}):p.stick({top:w-E}):p.reset({disable:!0})},q=!1,F=!1,M=function(){q&&(l.event.unbind(t,"scroll",I),q=!1)},D=function(){R(),C>=y?M():(I(),q||(l.event.bind(t,"scroll",I),q=!0))},W=function(){n.style.position="",n.style.left="",n.style.top="",n.style.bottom="",n.style.width="",n.classList?n.classList.remove(r.stickyClass):n.className=n.className.replace(new RegExp("(^|\\b)"+r.stickyClass.split(" ").join("|")+"(\\b|$)","gi")," "),p.css={},p.position=null,!0===u.isAttached&&u.detach()},P=function(){W(),d(),f()?M():D()},V=function(){r.onBeforeResize&&r.onBeforeResize.call(n,r),P(),r.onResize&&r.onResize.call(n,r)},Y=r.resizeDebounce?l.debounce(V,r.resizeDebounce):V,$=function(){F&&(l.event.unbind(t,"resize",Y),F=!1),M()},Q=function(){F||(l.event.bind(t,"resize",Y),F=!0),d(),f()?M():D()};this.options=function(t){return t?r.option||null:Object.assign({},r)},this.reinit=P,this.update=function(t){c(t),P()},this.attach=Q,this.detach=$,this.destroy=function(){$(),W()},c(s),Q(),l.event.bind(t,"load",P)};if(void 0!==t.jQuery){var n=t.jQuery;n.fn.extend({hcSticky:function(t){return this.length?this.each(function(){var e=n.data(this,"hcSticky");e?e.update(t):(e=new i(this,t),n.data(this,"hcSticky",e))}):this}})}return t.hcSticky=t.hcSticky||i,i}),function(t){"use strict";var e=t.hcSticky,o=t.document;"function"!=typeof Object.assign&&Object.defineProperty(Object,"assign",{value:function(t,e){if(null==t)throw new TypeError("Cannot convert undefined or null to object");for(var o=Object(t),i=1;i<arguments.length;i++){var n=arguments[i];if(null!=n)for(var s in n)Object.prototype.hasOwnProperty.call(n,s)&&(o[s]=n[s])}return o},writable:!0,configurable:!0}),Array.prototype.forEach||(Array.prototype.forEach=function(t){var e,o;if(null==this)throw new TypeError("this is null or not defined");var i=Object(this),n=i.length>>>0;if("function"!=typeof t)throw new TypeError(t+" is not a function");for(arguments.length>1&&(e=arguments[1]),o=0;o<n;){var s;o in i&&(s=i[o],t.call(e,s,o,i)),o++}});var i=function(){function e(e){var o=t.event;return o.target=o.target||o.srcElement||e,o}var i=o.documentElement,n=function(){};i.addEventListener?n=function(t,e,o){t.addEventListener(e,o,!1)}:i.attachEvent&&(n=function(t,o,i){t[o+i]=i.handleEvent?function(){var o=e(t);i.handleEvent.call(i,o)}:function(){var o=e(t);i.call(t,o)},t.attachEvent("on"+o,t[o+i])});var s=function(){};return i.removeEventListener?s=function(t,e,o){t.removeEventListener(e,o,!1)}:i.detachEvent&&(s=function(t,e,o){t.detachEvent("on"+e,t[e+o]);try{delete t[e+o]}catch(i){t[e+o]=void 0}}),{bind:n,unbind:s}}(),n=function(e,i){return t.getComputedStyle?i?o.defaultView.getComputedStyle(e,null).getPropertyValue(i):o.defaultView.getComputedStyle(e,null):e.currentStyle?i?e.currentStyle[i.replace(/-\w/g,function(t){return t.toUpperCase().replace("-","")})]:e.currentStyle:void 0},s=function(e){var i=e.getBoundingClientRect(),n=t.pageYOffset||o.documentElement.scrollTop,s=t.pageXOffset||o.documentElement.scrollLeft;return{top:i.top+n,left:i.left+s}};e.Helpers={isEmptyObject:function(t){for(var e in t)return!1;return!0},debounce:function(t,e,o){var i=void 0;return function(){var n=this,s=arguments,r=o&&!i;clearTimeout(i),i=setTimeout(function(){i=null,o||t.apply(n,s)},e),r&&t.apply(n,s)}},hasClass:function(t,e){return t.classList?t.classList.contains(e):new RegExp("(^| )"+e+"( |$)","gi").test(t.className)},offset:s,position:function(t){var e=t.offsetParent,o=s(e),i=s(t),r=n(e),l=n(t);return o.top+=parseInt(r.borderTopWidth)||0,o.left+=parseInt(r.borderLeftWidth)||0,{top:i.top-o.top-(parseInt(l.marginTop)||0),left:i.left-o.left-(parseInt(l.marginLeft)||0)}},getStyle:n,getCascadedStyle:function(e){var i=e.cloneNode(!0);i.style.display="none",Array.prototype.slice.call(i.querySelectorAll('input[type="radio"]')).forEach(function(t){t.removeAttribute("name")}),e.parentNode.insertBefore(i,e.nextSibling);var n=void 0;i.currentStyle?n=i.currentStyle:t.getComputedStyle&&(n=o.defaultView.getComputedStyle(i,null));var s={};for(var r in n)!isNaN(r)||"string"!=typeof n[r]&&"number"!=typeof n[r]||(s[r]=n[r]);if(Object.keys(s).length<3){s={};for(var l in n)isNaN(l)||(s[n[l].replace(/-\w/g,function(t){return t.toUpperCase().replace("-","")})]=n.getPropertyValue(n[l]))}if(s.margin||"auto"!==s.marginLeft?s.margin||s.marginLeft!==s.marginRight||s.marginLeft!==s.marginTop||s.marginLeft!==s.marginBottom||(s.margin=s.marginLeft):s.margin="auto",!s.margin&&"0px"===s.marginLeft&&"0px"===s.marginRight){var a=e.offsetLeft-e.parentNode.offsetLeft,c=a-(parseInt(s.left)||0)-(parseInt(s.right)||0),f=e.parentNode.offsetWidth-e.offsetWidth-a-(parseInt(s.right)||0)+(parseInt(s.left)||0)-c;0!==f&&1!==f||(s.margin="auto")}return i.parentNode.removeChild(i),i=null,s},event:i}}(window);
+
+(function (global, factory) {
+  'use strict';
+
+  if (typeof module === 'object' && typeof module.exports === 'object') {
+    if (global.document) {
+      module.exports = factory(global);
+    } else {
+      throw new Error('HC-Sticky requires a browser to run.');
+    }
+  } else if (typeof define === 'function' && define.amd) {
+    define('hcSticky', [], factory(global));
+  } else {
+    factory(global);
+  }
+})(typeof window !== 'undefined' ? window : this, function (window) {
+  'use strict';
+
+  var defaultOptions = {
+    top: 0,
+    bottom: 0,
+    bottomEnd: 0,
+    innerTop: 0,
+    innerSticker: null,
+    stickyClass: 'sticky',
+    stickTo: null,
+    followScroll: true,
+    queries: null,
+    queryFlow: 'down',
+    onStart: null,
+    onStop: null,
+    onBeforeResize: null,
+    onResize: null,
+    resizeDebounce: 100,
+    disable: false,
+    spacer: true
+  };
+
+  var document = window.document;
+
+  var hcSticky = function (elem, userSettings) {
+    // use querySeletor if string is passed
+    if (typeof elem === 'string') {
+      elem = document.querySelector(elem);
+    }
+
+    // check if element exist
+    if (!elem) {
+      return false;
+    }
+
+    var stickyOptions = {};
+    var Helpers = hcSticky.Helpers;
+    var elemParent = elem.parentNode;
+
+    // parent can't be static
+    if (Helpers.getStyle(elemParent, 'position') === 'static') {
+      elemParent.style.position = 'relative';
+    }
+
+    var setOptions = function () {
+      var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+      if (Helpers.isEmptyObject(options) && !Helpers.isEmptyObject(stickyOptions)) {
+        // nothing to set
+        return;
+      }
+
+      // extend options
+      stickyOptions = Object.assign({}, defaultOptions, stickyOptions, options);
+    };
+
+    var resetOptions = function (options) {
+      stickyOptions = Object.assign({}, defaultOptions, options || {});
+    };
+
+    var getOptions = function (option) {
+      return option ? stickyOptions.option || null : Object.assign({}, stickyOptions);
+    };
+
+    var isDisabled = function () {
+      return stickyOptions.disable;
+    };
+
+    var applyQueries = function () {
+      if (stickyOptions.queries) {
+        var window_width = window.innerWidth;
+        var queryFlow = stickyOptions.queryFlow;
+        var queries = stickyOptions.queries;
+
+        // reset settings
+        resetOptions(userSettings);
+
+        if (queryFlow === 'up') {
+          for (var width in queries) {
+            if (window_width >= width && !Helpers.isEmptyObject(queries[width])) {
+              setOptions(queries[width]);
+            }
+          }
+        } else {
+          var queries_arr = [];
+
+          // convert to array so we can reverse loop it
+          for (var b in stickyOptions.queries) {
+            var q = {};
+
+            q[b] = queries[b];
+            queries_arr.push(q);
+          }
+
+          for (var i = queries_arr.length - 1; i >= 0; i--) {
+            var query = queries_arr[i];
+            var breakpoint = Object.keys(query)[0];
+
+            if (window_width <= breakpoint && !Helpers.isEmptyObject(query[breakpoint])) {
+              setOptions(query[breakpoint]);
+            }
+          }
+        }
+      }
+    };
+
+    // our helper function for getting necesery styles
+    var getStickyCss = function (el) {
+      var cascadedStyle = Helpers.getCascadedStyle(el);
+      var computedStyle = Helpers.getStyle(el);
+
+      var css = {
+        height: el.offsetHeight + 'px',
+        left: cascadedStyle.left,
+        right: cascadedStyle.right,
+        top: cascadedStyle.top,
+        bottom: cascadedStyle.bottom,
+        position: computedStyle.position,
+        display: computedStyle.display,
+        verticalAlign: computedStyle.verticalAlign,
+        boxSizing: computedStyle.boxSizing,
+        marginLeft: cascadedStyle.marginLeft,
+        marginRight: cascadedStyle.marginRight,
+        marginTop: cascadedStyle.marginTop,
+        marginBottom: cascadedStyle.marginBottom,
+        paddingLeft: cascadedStyle.paddingLeft,
+        paddingRight: cascadedStyle.paddingRight
+      };
+
+      if (cascadedStyle['float']) {
+        css['float'] = cascadedStyle['float'] || 'none';
+      }
+
+      if (cascadedStyle.cssFloat) {
+        css['cssFloat'] = cascadedStyle.cssFloat || 'none';
+      }
+
+      // old firefox box-sizing
+      if (computedStyle.MozBoxSizing) {
+        css['MozBoxSizing'] = computedStyle.MozBoxSizing;
+      }
+
+      css['width'] = cascadedStyle.width !== 'auto' ? cascadedStyle.width : css.boxSizing === 'border-box' || css.MozBoxSizing === 'border-box' ? el.offsetWidth + 'px' : computedStyle.width;
+
+      return css;
+    };
+
+    var Sticky = {
+      css: {},
+      position: null, // so we don't need to check css all the time
+      stick: function () {
+        var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+        if (Helpers.hasClass(elem, stickyOptions.stickyClass)) {
+          // check if element is already sticky
+          return;
+        }
+
+        if (stickyOptions.spacer && Spacer.isAttached === false) {
+          Spacer.attach();
+        }
+
+        Sticky.position = 'fixed';
+
+        // apply styles
+        elem.style.position = 'fixed';
+        elem.style.left = Spacer.offsetLeft + 'px';
+        elem.style.width = Spacer.width;
+
+        if (typeof args.bottom === 'undefined') {
+          elem.style.bottom = 'auto';
+        } else {
+          elem.style.bottom = args.bottom + 'px';
+        }
+
+        if (typeof args.top === 'undefined') {
+          elem.style.top = 'auto';
+        } else {
+          elem.style.top = args.top + 'px';
+        }
+
+        // add sticky class
+        if (elem.classList) {
+          elem.classList.add(stickyOptions.stickyClass);
+        } else {
+          elem.className += ' ' + stickyOptions.stickyClass;
+        }
+
+        // fire 'start' event
+        if (stickyOptions.onStart) {
+          stickyOptions.onStart.call(elem, stickyOptions);
+        }
+      },
+      reset: function () {
+        var args = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+        args.disable = args.disable || false;
+
+        // check if we've already done this
+        if (Sticky.position !== 'fixed' && Sticky.position !== null && (typeof args.top === 'undefined' && typeof args.bottom === 'undefined' || typeof args.top !== 'undefined' && (parseInt(Helpers.getStyle(elem, 'top')) || 0) === args.top || typeof args.bottom !== 'undefined' && (parseInt(Helpers.getStyle(elem, 'bottom')) || 0) === args.bottom)) {
+          return;
+        }
+
+        if (stickyOptions.spacer) {
+          if (args.disable === true) {
+            // remove spacer
+            if (Spacer.isAttached === true) {
+              Spacer.detach();
+            }
+          } else {
+            // check spacer
+            if (Spacer.isAttached === false) {
+              Spacer.attach();
+            }
+          }
+        }
+
+        var position = args.position || Sticky.css.position;
+
+        // remember position
+        Sticky.position = position;
+
+        // apply styles
+        elem.style.position = position;
+        elem.style.left = args.disable === true ? Sticky.css.left : Spacer.positionLeft + 'px';
+        elem.style.width = position !== 'absolute' ? Sticky.css.width : Spacer.width;
+
+        if (typeof args.bottom === 'undefined') {
+          elem.style.bottom = args.disable === true ? '' : 'auto';
+        } else {
+          elem.style.bottom = args.bottom + 'px';
+        }
+
+        if (typeof args.top === 'undefined') {
+          elem.style.top = args.disable === true ? '' : 'auto';
+        } else {
+          elem.style.top = args.top + 'px';
+        }
+
+        // remove sticky class
+        if (elem.classList) {
+          elem.classList.remove(stickyOptions.stickyClass);
+        } else {
+          elem.className = elem.className.replace(new RegExp('(^|\\b)' + stickyOptions.stickyClass.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+        }
+
+        // fire 'stop' event
+        if (stickyOptions.onStop) {
+          stickyOptions.onStop.call(elem, stickyOptions);
+        }
+      }
+    };
+
+    var Spacer = {
+      el: document.createElement('div'),
+      offsetLeft: null,
+      positionLeft: null,
+      width: null,
+      isAttached: false,
+      init: function () {
+        // copy styles from element
+        for (var prop in Sticky.css) {
+          Spacer.el.style[prop] = Sticky.css[prop];
+        }
+
+        var elemStyle = Helpers.getStyle(elem);
+
+        // get spacer offset and position
+        Spacer.offsetLeft = Helpers.offset(elem).left - (parseInt(elemStyle.marginLeft) || 0);
+        if (elem.offsetParent != null) {
+          Spacer.positionLeft = Helpers.position(elem).left;
+        } else {
+          Spacer.positionLeft = Helpers.offset(elem).left;
+        }
+
+        // get spacer width
+        Spacer.width = Helpers.getStyle(elem, 'width');
+      },
+      attach: function () {
+        // insert spacer to DOM
+        elemParent.insertBefore(Spacer.el, elem.nextSibling);
+        Spacer.isAttached = true;
+      },
+      detach: function () {
+        // remove spacer from DOM
+        Spacer.el = elemParent.removeChild(Spacer.el);
+        Spacer.isAttached = false;
+      }
+    };
+
+    // define our private variables
+    var stickTo_document = void 0;
+    var container = void 0;
+    var inner_sticker = void 0;
+
+    var container_height = void 0;
+    var container_offsetTop = void 0;
+
+    var elemParent_offsetTop = void 0;
+
+    var window_height = void 0;
+
+    var options_top = void 0;
+    var options_bottom = void 0;
+
+    var stick_top = void 0;
+    var stick_bottom = void 0;
+
+    var top_limit = void 0;
+    var bottom_limit = void 0;
+
+    var largerSticky = void 0;
+    var sticky_height = void 0;
+    var sticky_offsetTop = void 0;
+
+    var calcContainerHeight = void 0;
+    var calcStickyHeight = void 0;
+
+    var calcSticky = function () {
+      // get/set element styles
+      Sticky.css = getStickyCss(elem);
+
+      // init or reinit spacer
+      Spacer.init();
+
+      // check if referring element is document
+      stickTo_document = stickyOptions.stickTo && (stickyOptions.stickTo === 'document' || stickyOptions.stickTo.nodeType && stickyOptions.stickTo.nodeType === 9 || typeof stickyOptions.stickTo === 'object' && stickyOptions.stickTo instanceof (typeof HTMLDocument !== 'undefined' ? HTMLDocument : Document)) ? true : false;
+
+      // select referred container
+      container = stickyOptions.stickTo ? stickTo_document ? elemParent : typeof stickyOptions.stickTo === 'string' ? document.querySelector(stickyOptions.stickTo) : stickyOptions.stickTo : elemParent;
+
+      // get sticky height
+      calcStickyHeight = function () {
+        var height = elem.offsetHeight + (parseInt(Sticky.css.marginTop) || 0) + (parseInt(Sticky.css.marginBottom) || 0);
+        var h_diff = (sticky_height || 0) - height;
+
+        if (h_diff >= -1 && h_diff <= 1) {
+          // sometimes element height changes by 1px when it get fixed position, so don't return new value
+          return sticky_height;
+        } else {
+          return height;
+        }
+      };
+
+      sticky_height = calcStickyHeight();
+
+      // get container height
+      calcContainerHeight = function () {
+        return !stickTo_document ? container.offsetHeight : Math.max(document.documentElement.clientHeight, document.body.scrollHeight, document.documentElement.scrollHeight, document.body.offsetHeight, document.documentElement.offsetHeight);
+      };
+
+      container_height = calcContainerHeight();
+
+      container_offsetTop = Helpers.offset(container).top;
+      elemParent_offsetTop = !stickyOptions.stickTo ? container_offsetTop // parent is container
+      : Helpers.offset(elemParent).top;
+      window_height = window.innerHeight;
+      sticky_offsetTop = elem.offsetTop - (parseInt(Sticky.css.marginTop) || 0);
+
+      // get inner sticker element
+      inner_sticker = stickyOptions.innerSticker ? typeof stickyOptions.innerSticker === 'string' ? document.querySelector(stickyOptions.innerSticker) : stickyOptions.innerSticker : null;
+
+      // top
+      options_top = isNaN(stickyOptions.top) && stickyOptions.top.indexOf('%') > -1 ? parseFloat(stickyOptions.top) / 100 * window_height : stickyOptions.top;
+
+      // bottom
+      options_bottom = isNaN(stickyOptions.bottom) && stickyOptions.bottom.indexOf('%') > -1 ? parseFloat(stickyOptions.bottom) / 100 * window_height : stickyOptions.bottom;
+
+      // calculate sticky breakpoints
+      stick_top = inner_sticker ? inner_sticker.offsetTop : stickyOptions.innerTop ? stickyOptions.innerTop : 0;
+
+      stick_bottom = isNaN(stickyOptions.bottomEnd) && stickyOptions.bottomEnd.indexOf('%') > -1 ? parseFloat(stickyOptions.bottomEnd) / 100 * window_height : stickyOptions.bottomEnd;
+
+      top_limit = container_offsetTop - options_top + stick_top + sticky_offsetTop;
+    };
+
+    // store scroll position so we can determine scroll direction
+    var last_pos = window.pageYOffset || document.documentElement.scrollTop;
+    var diff_y = 0;
+    var scroll_dir = void 0;
+
+    var runSticky = function () {
+      // always calculate sticky and container height in case of change
+      sticky_height = calcStickyHeight();
+      container_height = calcContainerHeight();
+
+      bottom_limit = container_offsetTop + container_height - options_top - stick_bottom;
+
+      // check if sticky is bigger than container
+      largerSticky = sticky_height > window_height;
+
+      var offset_top = window.pageYOffset || document.documentElement.scrollTop;
+      var sticky_top = Math.round(Helpers.offset(elem).top);
+      var sticky_window_top = sticky_top - offset_top;
+      var bottom_distance = void 0;
+
+      // get scroll direction
+      scroll_dir = offset_top < last_pos ? 'up' : 'down';
+      diff_y = offset_top - last_pos;
+      last_pos = offset_top;
+
+      if (offset_top > top_limit) {
+        // http://geek-and-poke.com/geekandpoke/2012/7/27/simply-explained.html
+        if (bottom_limit + options_top + (largerSticky ? options_bottom : 0) - (stickyOptions.followScroll && largerSticky ? 0 : options_top) <= offset_top + sticky_height - stick_top - (sticky_height - stick_top > window_height - (top_limit - stick_top) && stickyOptions.followScroll ? (bottom_distance = sticky_height - window_height - stick_top) > 0 ? bottom_distance : 0 : 0)) {
+          // bottom reached end
+          Sticky.reset({
+            position: 'absolute',
+            //top: bottom_limit - sticky_height - top_limit + stick_top + sticky_offsetTop
+            bottom: elemParent_offsetTop + elemParent.offsetHeight - bottom_limit - options_top
+          });
+        } else if (largerSticky && stickyOptions.followScroll) {
+          // sticky is bigger than container and follows scroll
+          if (scroll_dir === 'down') {
+            // scroll down
+            if (Math.floor(sticky_window_top + sticky_height + options_bottom) <= window_height) {
+              // stick on bottom
+              Sticky.stick({
+                //top: window_height - sticky_height - options_bottom
+                bottom: options_bottom
+              });
+            } else if (Sticky.position === 'fixed') {
+              // bottom reached window bottom
+              Sticky.reset({
+                position: 'absolute',
+                top: sticky_top - options_top - top_limit - diff_y + stick_top
+              });
+            }
+          } else {
+            // scroll up
+            if (Math.ceil(sticky_window_top + stick_top) < 0 && Sticky.position === 'fixed') {
+              // top reached window top
+              Sticky.reset({
+                position: 'absolute',
+                top: sticky_top - options_top - top_limit + stick_top - diff_y
+              });
+            } else if (sticky_top >= offset_top + options_top - stick_top) {
+              // stick on top
+              Sticky.stick({
+                top: options_top - stick_top
+              });
+            }
+          }
+        } else {
+          // stick on top
+          Sticky.stick({
+            top: options_top - stick_top
+          });
+        }
+      } else {
+        // starting point
+        Sticky.reset({
+          disable: true
+        });
+      }
+    };
+
+    var scrollAttached = false;
+    var resizeAttached = false;
+
+    var stopSticky = function () {
+      if (scrollAttached) {
+        // detach sticky from scroll
+        Helpers.event.unbind(window, 'scroll', runSticky);
+
+        // sticky is not attached to scroll anymore
+        scrollAttached = false;
+      }
+    };
+
+    var initSticky = function () {
+      // calculate stuff
+      calcSticky();
+
+      // check if sticky is bigger than reffering container
+      if (sticky_height >= container_height) {
+        stopSticky();
+
+        return;
+      }
+
+      // run
+      runSticky();
+
+      if (!scrollAttached) {
+        // attach sticky to scroll
+        Helpers.event.bind(window, 'scroll', runSticky);
+
+        // sticky is attached to scroll
+        scrollAttached = true;
+      }
+    };
+
+    var resetSticky = function () {
+      // remove inline styles
+      elem.style.position = '';
+      elem.style.left = '';
+      elem.style.top = '';
+      elem.style.bottom = '';
+      elem.style.width = '';
+
+      // remove sticky class
+      if (elem.classList) {
+        elem.classList.remove(stickyOptions.stickyClass);
+      } else {
+        elem.className = elem.className.replace(new RegExp('(^|\\b)' + stickyOptions.stickyClass.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+      }
+
+      // reset sticky object data
+      Sticky.css = {};
+      Sticky.position = null;
+
+      // remove spacer
+      if (stickyOptions.spacer && Spacer.isAttached === true) {
+        Spacer.detach();
+      }
+    };
+
+    var reinitSticky = function () {
+      resetSticky();
+      applyQueries();
+
+      if (isDisabled()) {
+        stopSticky();
+        return;
+      }
+
+      // restart sticky
+      initSticky();
+    };
+
+    var resizeSticky = function () {
+      // fire 'beforeResize' event
+      if (stickyOptions.onBeforeResize) {
+        stickyOptions.onBeforeResize.call(elem, stickyOptions);
+      }
+
+      // reinit sticky
+      reinitSticky();
+
+      // fire 'resize' event
+      if (stickyOptions.onResize) {
+        stickyOptions.onResize.call(elem, stickyOptions);
+      }
+    };
+
+    var resize_cb = !stickyOptions.resizeDebounce ? resizeSticky : Helpers.debounce(resizeSticky, stickyOptions.resizeDebounce);
+
+    // Method for updating options
+    var Update = function (options) {
+      setOptions(options);
+      reinitSticky();
+    };
+
+    var Detach = function () {
+      // detach resize reinit
+      if (resizeAttached) {
+        Helpers.event.unbind(window, 'resize', resize_cb);
+        resizeAttached = false;
+      }
+
+      stopSticky();
+    };
+
+    var Destroy = function () {
+      Detach();
+      resetSticky();
+    };
+
+    var Attach = function () {
+      // attach resize reinit
+      if (!resizeAttached) {
+        Helpers.event.bind(window, 'resize', resize_cb);
+        resizeAttached = true;
+      }
+
+      applyQueries();
+
+      if (isDisabled()) {
+        stopSticky();
+        return;
+      }
+
+      initSticky();
+    };
+
+    this.options = getOptions;
+    this.reinit = reinitSticky;
+    this.update = Update;
+    this.attach = Attach;
+    this.detach = Detach;
+    this.destroy = Destroy;
+
+    // init settings
+    setOptions(userSettings);
+
+    // start sticky
+    Attach();
+
+    // reinit on complete page load
+    Helpers.event.bind(window, 'load', reinitSticky);
+  };
+
+  // jQuery Plugin
+  if (typeof window.jQuery !== 'undefined') {
+    var $ = window.jQuery;
+
+    $.fn.extend({
+      hcSticky: function (options) {
+        // check if selected element exist
+        if (!this.length) {
+          return this;
+        }
+
+        return this.each(function () {
+          var namespace = 'hcSticky';
+          var instance = $.data(this, namespace);
+
+          if (instance) {
+            // already created
+            instance.update(options);
+          } else {
+            // create new instance
+            instance = new hcSticky(this, options);
+            $.data(this, namespace, instance);
+          }
+        });
+      }
+    });
+  }
+
+  // browser global
+  window.hcSticky = window.hcSticky || hcSticky;
+
+  return hcSticky;
+});
+(function (window) {
+  'use strict';
+
+  var hcSticky = window.hcSticky;
+  var document = window.document;
+
+  /*
+   * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign
+   */
+  if (typeof Object.assign !== 'function') {
+    Object.defineProperty(Object, 'assign', {
+      value: function assign(target, varArgs) {
+        'use strict';
+
+        if (target == null) {
+          throw new TypeError('Cannot convert undefined or null to object');
+        }
+
+        var to = Object(target);
+
+        for (var index = 1; index < arguments.length; index++) {
+          var nextSource = arguments[index];
+
+          if (nextSource != null) {
+            for (var nextKey in nextSource) {
+              if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+                to[nextKey] = nextSource[nextKey];
+              }
+            }
+          }
+        }
+        return to;
+      },
+      writable: true,
+      configurable: true
+    });
+  }
+
+  /*
+   * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach
+   */
+  if (!Array.prototype.forEach) {
+    Array.prototype.forEach = function (callback) {
+      var T, k;
+
+      if (this == null) {
+        throw new TypeError('this is null or not defined');
+      }
+
+      var O = Object(this);
+      var len = O.length >>> 0;
+
+      if (typeof callback !== 'function') {
+        throw new TypeError(callback + ' is not a function');
+      }
+
+      if (arguments.length > 1) {
+        T = arguments[1];
+      }
+
+      k = 0;
+
+      while (k < len) {
+        var kValue;
+
+        if (k in O) {
+          kValue = O[k];
+          callback.call(T, kValue, k, O);
+        }
+
+        k++;
+      }
+    };
+  }
+
+  /*
+   * https://github.com/desandro/eventie
+   */
+  var event = function () {
+    var docElem = document.documentElement;
+
+    var bind = function () {};
+
+    function getIEEvent(obj) {
+      var event = window.event;
+      // add event.target
+      event.target = event.target || event.srcElement || obj;
+      return event;
+    }
+
+    if (docElem.addEventListener) {
+      bind = function (obj, type, fn) {
+        obj.addEventListener(type, fn, false);
+      };
+    } else if (docElem.attachEvent) {
+      bind = function (obj, type, fn) {
+        obj[type + fn] = fn.handleEvent ? function () {
+          var event = getIEEvent(obj);
+          fn.handleEvent.call(fn, event);
+        } : function () {
+          var event = getIEEvent(obj);
+          fn.call(obj, event);
+        };
+        obj.attachEvent("on" + type, obj[type + fn]);
+      };
+    }
+
+    var unbind = function () {};
+
+    if (docElem.removeEventListener) {
+      unbind = function (obj, type, fn) {
+        obj.removeEventListener(type, fn, false);
+      };
+    } else if (docElem.detachEvent) {
+      unbind = function (obj, type, fn) {
+        obj.detachEvent("on" + type, obj[type + fn]);
+        try {
+          delete obj[type + fn];
+        } catch (err) {
+          // can't delete window object properties
+          obj[type + fn] = undefined;
+        }
+      };
+    }
+
+    return {
+      bind: bind,
+      unbind: unbind
+    };
+  }();
+
+  // debounce taken from underscore
+  var debounce = function (func, wait, immediate) {
+    var timeout = void 0;
+
+    return function () {
+      var context = this;
+      var args = arguments;
+      var later = function () {
+        timeout = null;
+        if (!immediate) {
+          func.apply(context, args);
+        }
+      };
+      var callNow = immediate && !timeout;
+
+      clearTimeout(timeout);
+      timeout = setTimeout(later, wait);
+
+      if (callNow) {
+        func.apply(context, args);
+      }
+    };
+  };
+
+  // cross-browser get style
+  var getStyle = function (el, style) {
+    if (window.getComputedStyle) {
+      return style ? document.defaultView.getComputedStyle(el, null).getPropertyValue(style) : document.defaultView.getComputedStyle(el, null);
+    } else if (el.currentStyle) {
+      return style ? el.currentStyle[style.replace(/-\w/g, function (s) {
+        return s.toUpperCase().replace('-', '');
+      })] : el.currentStyle;
+    }
+  };
+
+  // check if object is empty
+  var isEmptyObject = function (obj) {
+    for (var name in obj) {
+      return false;
+    }
+
+    return true;
+  };
+
+  // check if element has class
+  var hasClass = function (el, className) {
+    if (el.classList) {
+      return el.classList.contains(className);
+    } else {
+      return new RegExp('(^| )' + className + '( |$)', 'gi').test(el.className);
+    }
+  };
+
+  // like jQuery .offset()
+  var offset = function (el) {
+    var rect = el.getBoundingClientRect();
+    var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    var scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+
+    return {
+      top: rect.top + scrollTop,
+      left: rect.left + scrollLeft
+    };
+  };
+
+  // like jQuery .position()
+  var position = function (el) {
+    var offsetParent = el.offsetParent;
+    var parentOffset = offset(offsetParent);
+    var elemOffset = offset(el);
+    var prentStyle = getStyle(offsetParent);
+    var elemStyle = getStyle(el);
+
+    parentOffset.top += parseInt(prentStyle.borderTopWidth) || 0;
+    parentOffset.left += parseInt(prentStyle.borderLeftWidth) || 0;
+
+    return {
+      top: elemOffset.top - parentOffset.top - (parseInt(elemStyle.marginTop) || 0),
+      left: elemOffset.left - parentOffset.left - (parseInt(elemStyle.marginLeft) || 0)
+    };
+  };
+
+  // get cascaded instead of computed styles
+  var getCascadedStyle = function (el) {
+    // clone element
+    var clone = el.cloneNode(true);
+
+    clone.style.display = 'none';
+
+    // remove name attr from cloned radio buttons to prevent their clearing
+    Array.prototype.slice.call(clone.querySelectorAll('input[type="radio"]')).forEach(function (el) {
+      el.removeAttribute('name');
+    });
+
+    // insert clone to DOM
+    el.parentNode.insertBefore(clone, el.nextSibling);
+
+    // get styles
+    var currentStyle = void 0;
+
+    if (clone.currentStyle) {
+      currentStyle = clone.currentStyle;
+    } else if (window.getComputedStyle) {
+      currentStyle = document.defaultView.getComputedStyle(clone, null);
+    }
+
+    // new style oject
+    var style = {};
+
+    for (var prop in currentStyle) {
+      if (isNaN(prop) && (typeof currentStyle[prop] === 'string' || typeof currentStyle[prop] === 'number')) {
+        style[prop] = currentStyle[prop];
+      }
+    }
+
+    // safari copy
+    if (Object.keys(style).length < 3) {
+      style = {}; // clear
+      for (var _prop in currentStyle) {
+        if (!isNaN(_prop)) {
+          style[currentStyle[_prop].replace(/-\w/g, function (s) {
+            return s.toUpperCase().replace('-', '');
+          })] = currentStyle.getPropertyValue(currentStyle[_prop]);
+        }
+      }
+    }
+
+    // check for margin:auto
+    if (!style.margin && style.marginLeft === 'auto') {
+      style.margin = 'auto';
+    } else if (!style.margin && style.marginLeft === style.marginRight && style.marginLeft === style.marginTop && style.marginLeft === style.marginBottom) {
+      style.margin = style.marginLeft;
+    }
+
+    // safari margin:auto hack
+    if (!style.margin && style.marginLeft === '0px' && style.marginRight === '0px') {
+      var posLeft = el.offsetLeft - el.parentNode.offsetLeft;
+      var marginLeft = posLeft - (parseInt(style.left) || 0) - (parseInt(style.right) || 0);
+      var marginRight = el.parentNode.offsetWidth - el.offsetWidth - posLeft - (parseInt(style.right) || 0) + (parseInt(style.left) || 0);
+      var diff = marginRight - marginLeft;
+
+      if (diff === 0 || diff === 1) {
+        style.margin = 'auto';
+      }
+    }
+
+    // destroy clone
+    clone.parentNode.removeChild(clone);
+    clone = null;
+
+    return style;
+  };
+
+  hcSticky.Helpers = {
+    isEmptyObject: isEmptyObject,
+    debounce: debounce,
+    hasClass: hasClass,
+    offset: offset,
+    position: position,
+    getStyle: getStyle,
+    getCascadedStyle: getCascadedStyle,
+    event: event
+  };
+})(window);
